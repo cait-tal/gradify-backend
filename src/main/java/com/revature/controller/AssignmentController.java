@@ -10,7 +10,6 @@ import io.javalin.http.UnauthorizedResponse;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 
-import javax.xml.ws.Response;
 import java.util.List;
 
 public class AssignmentController implements Controller {
