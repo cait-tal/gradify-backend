@@ -1,45 +1,68 @@
 plugins {
     id 'java'
-    id 'application'
     id "org.sonarqube" version "3.3"
+    id 'jacoco'
 }
 
-group 'org.example'
+group 'com.revature'
 version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
-    maven {
-        url 'https://repo.clojars.org'
-        name 'Clojars'
+}
+
+jacoco {
+    toolVersion = "0.8.7"
+    reportsDirectory = file("$buildDir/jacoco")
+}
+
+test {
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.enabled = true
     }
 }
+
 sonarqube {
     properties {
-        property "sonar.projectKey", "cait-tal_gradify-backend"
-        property "sonar.organization", "cait-tal"
+        property "sonar.projectKey", "java-gcp-220228_gradify-backend"
+        property "sonar.organization", "java-gcp-220228"
         property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.coverage.jacoco.xmlReportPath", "$buildDir/jacoco/test/jacocoTestReport.xml"
     }
 }
+
 jar {
     manifest {
         attributes 'Main-Class': 'com.revature.main.Driver'
     }
+
     from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+        (configurations.runtimeClasspath).collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
     }
-    duplicatesStrategy('exclude')
+
+    duplicatesStrategy 'exclude'
 }
+
 dependencies {
-    implementation 'io.javalin:javalin:4.3.0'
-    implementation 'org.postgresql:postgresql:42.3.3'
-    implementation 'ch.qos.logback:logback-classic:1.2.11'
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.4'
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
-    implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
-    implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.4'
+    implementation 'org.postgresql:postgresql:42.3.3'
+    implementation 'io.javalin:javalin:4.3.0'
+    implementation 'ch.qos.logback:logback-classic:1.2.11'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+    implementation 'org.apache.tika:tika-core:2.3.0'
+    testImplementation 'org.mockito:mockito-core:4.4.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:4.4.0'
 }
 
 test {
