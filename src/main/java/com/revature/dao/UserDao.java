@@ -33,10 +33,10 @@ public class UserDao {
                 String un = rs.getString("username");
                 String pw = rs.getString("password");
                 String role = rs.getString("role");
-
+                pstmt.close();
                 return new User(userId, un, pw, role);
             }
-
+            pstmt.close();
             return null;
         }
     }

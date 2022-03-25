@@ -64,6 +64,8 @@ public class AssignmentDao {
 
             Assignment a = new Assignment(aId, assignmentName, gr, student, trainer);
 
+            pstmt.close();
+            pstmt2.close();
             con.commit();
             return a;
         }
@@ -100,6 +102,9 @@ public class AssignmentDao {
             User student = new User(sId, studentUsername, studentPassword, studentRole);
 
             Assignment assignment = new Assignment(assignmentId, dto.getAssignmentName(), 0, student, null);
+
+            pstmt1.close();
+            pstmt2.close();
 
             con.commit(); // commit the transaction
 
@@ -149,6 +154,7 @@ public class AssignmentDao {
                 assignments.add(a);
             }
 
+            pstmt.close();
             return assignments;
         }
     }
@@ -196,7 +202,7 @@ public class AssignmentDao {
 
                     assignments.add(a);
                 }
-
+                pstmt.close();
                 return assignments;
             }
         }
